@@ -12,11 +12,12 @@ $jenisTransaksi = $_POST['jenisTransaksi'];
 $bukti = $_POST['bukti'];
 $lokasi = $_POST['lokasi'];
 $kodeBarang = $_POST['kodeBarang'];
-// $namaBarang = $_POST['namaBarang'];
+$namaBarang = $_POST['namaBarang'];
 $tglTransaksi = $_POST['tglTransaksi'];
+$waktuTransaksi = $_POST['waktuTransaksi'];
 $quantity = $_POST['quantity'];
-// $program = $_POST['program'];
-// $user = $_POST['user'];
+$program = $_POST['program'];
+$user = $_POST['user'];
 
 if ($jenisTransaksi == 'Masuk') {
     tambahStok($jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi, $quantity);
@@ -31,21 +32,22 @@ function tambahStok($jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi
         // $query = "INSERT INTO barang (KodeBarang, NamaBarang) ";
         // $conn->query($query);
 
-        $query = "SELECT * FROM saldo WHERE LokasiID = (SELECT ID FROM lokasi WHERE KodeLokasi = '$lokasi') 
-              AND KodeBarangID = (SELECT ID FROM barang WHERE KodeBarang = '$kodeBarang') ORDER BY TglMasuk DESC LIMIT 1";
-        $result = $conn->query($query);
+        $query = "INSERT INTO saldo (LokasiID, KodeBarangID, quantity) VALUES (lokasi, kodeBarang, tglTransaksi, quantity)";
+        $result_saldo = mysli_query($conn, $query);
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        // $tglMasuk = $tglTransaksi;
-        $tglMasukTerakhir = $row['TglMasuk'];
-        if ($tglTransaksi < $tglMasukTerakhir) {
-            echo "Validasi Gagal: Tanggal transaksi tidak valid!";
-            return;
-        }
-    }
 
-    $query = "INSERT INTO transaksi (JenisTransaksi, Bukti, Lokasi, KodeBarang, TglTransaksi, Quantity) 
+
+    // if ($result_saldo->num_rows > 0) {
+    //     $row = $result_saldo->fetch_assoc();
+    //     // $tglMasuk = $tglTransaksi;
+    //     $tglMasukTerakhir = $row['TglMasuk'];
+    //     if ($tglTransaksi < $tglMasukTerakhir) {
+    //         echo "Validasi Gagal: Tanggal transaksi tidak valid!";
+    //         return;
+    //     }
+    // }
+
+    $query = "INSERT INTO transaksi (JenisTransaksi, Bukti, LokasiID, KodeBarangID, TglTransaksi, WaktuTransaksi, Quantity) 
               VALUES ('$jenisTransaksi', '$bukti', (SELECT ID FROM lokasi WHERE KodeLokasi = '$lokasi'),
               (SELECT ID FROM barang WHERE KodeBarang = '$kodeBarang'), '$tglTransaksi', $quantity)";
     $conn->query($query);
