@@ -1,9 +1,8 @@
 <?php
-$conn =new mysqli('localhost','root','','baru_aplikasi');
+$conn = new mysqli('localhost', 'root', '', 'baru_aplikasi');
 if ($conn) {
     echo " ";
-}
-else {
+} else {
     die(mysqli_error($conn));
 }
 
@@ -26,16 +25,12 @@ if ($jenisTransaksi == 'Masuk') {
 }
 
 // Program Menambah Stok (Masuk)
-function tambahStok($jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi, $quantity) {
+function tambahStok($jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi, $quantity)
+{
     global $conn;
 
-        // $query = "INSERT INTO barang (KodeBarang, NamaBarang) ";
-        // $conn->query($query);
-
-        $query = "INSERT INTO saldo (LokasiID, KodeBarangID, quantity) VALUES (lokasi, kodeBarang, tglTransaksi, quantity)";
-        $result_saldo = mysli_query($conn, $query);
-
-
+    // $query = "INSERT INTO barang (KodeBarang, NamaBarang) ";
+    // $conn->query($query);
 
     // if ($result_saldo->num_rows > 0) {
     //     $row = $result_saldo->fetch_assoc();
@@ -47,15 +42,28 @@ function tambahStok($jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi
     //     }
     // }
 
+    $query = "INSERT INTO saldo (LokasiID, KodeBarangID, quantity) VALUES (lokasi, kodeBarang, tglTransaksi, quantity)";
+    $result_saldo = mysqli_query($conn, $query);
+    if ($result_saldo) {
+        echo "<script>alert('Data Saldo berhasil ditambahkan!'); window.location.href='index.php';</script>";
+    } else {
+        echo "<script>alert('Insert Data Gagal!'); window.location.href='index.php';</script>";
+    }
     $query = "INSERT INTO transaksi (JenisTransaksi, Bukti, LokasiID, KodeBarangID, TglTransaksi, WaktuTransaksi, Quantity) 
               VALUES ('$jenisTransaksi', '$bukti', (SELECT ID FROM lokasi WHERE KodeLokasi = '$lokasi'),
               (SELECT ID FROM barang WHERE KodeBarang = '$kodeBarang'), '$tglTransaksi', $quantity)";
-    $conn->query($query);
-    echo "Transaksi berhasil ditambahkan!";
+    $result_transaksi = mysqli_query($conn, $query);
+    if ($result_transaksi) {
+        echo "<script>alert('Data Saldo berhasil ditambahkan!'); window.location.href='index.php';</script>";
+    } else {
+        echo "<script>alert('Insert Data Gagal!'); window.location.href='index.php';</script>";
+    }
+    
 }
 
 // Program Mengurangi Stok (Keluar)
-function kurangiStok($jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi, $quantity) {
+function kurangiStok($jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi, $quantity)
+{
     global $conn;
 
     // Validasi tgl transaksi dan saldo
@@ -92,7 +100,8 @@ function kurangiStok($jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaks
 }
 
 // Program Edit Transaksi
-function editTransaksi($id, $jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi, $quantity, $program, $user) {
+function editTransaksi($id, $jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi, $quantity, $program, $user)
+{
     global $conn;
 
     $query = "UPDATE transaksi SET JenisTransaksi = '$jenisTransaksi', Bukti = '$bukti', LokasiID = (SELECT ID FROM lokasi WHERE KodeLokasi = '$lokasi'), 
@@ -130,11 +139,11 @@ switch ($action) {
         // Pemanggilan program editTransaksi
         editTransaksi($idEdit, $jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi, $quantity, $program, $user);
         break;
-    // // case 'hapus':
-    // //     $idHapus = $_POST['idHapus'];
-    // //     // Pemanggilan program hapusTransaksi
-    // //     hapusTransaksi($idHapus);
-    //     break;
+        // // case 'hapus':
+        // //     $idHapus = $_POST['idHapus'];
+        // //     // Pemanggilan program hapusTransaksi
+        // //     hapusTransaksi($idHapus);
+        //     break;
     default:
         echo "\n Aksi tidak valid!";
 }
@@ -142,8 +151,10 @@ switch ($action) {
 <br>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 </head>
+
 <body>
     <!-- <h2>Maintenance Stok</h2>
     <form action="stok.php" method="post">
@@ -168,15 +179,16 @@ switch ($action) {
         <br><label for="quantity">Quantity:</label>
         <input type="text" name="quantity" id="quantity"><br> -->
 
-        <!-- <br><label for="program">Program:</label>
+    <!-- <br><label for="program">Program:</label>
         <input type="text" name="program" id="program"><br>
 
         <br><label for="user">User:</label>
         <input type="text" name="user" id="user"><br> -->
 
-        <!-- <br><a href ="dashboard.php" type="submit" value="Dashboard">Dashboard</a> -->
-        <br><a href="dashboard.php" class="btn btn-primary">Dashboard</a>
+    <!-- <br><a href ="dashboard.php" type="submit" value="Dashboard">Dashboard</a> -->
+    <br><a href="dashboard.php" class="btn btn-primary">Dashboard</a>
     </form>
 </body>
+
 </html>
 <br>
