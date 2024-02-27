@@ -42,7 +42,7 @@ function tambahStok($jenisTransaksi, $bukti, $lokasi, $kodeBarang, $tglTransaksi
     //     }
     // }
 
-    $query = "INSERT INTO saldo (LokasiID, KodeBarangID, quantity) VALUES (lokasi, kodeBarang, tglTransaksi, quantity)";
+    $query = "INSERT INTO saldo (LokasiID, KodeBarangID, quantity) VALUES ('$lokasi', '$kodeBarang', '$tglTransaksi', '$quantity')";
     $result_saldo = mysqli_query($conn, $query);
     if ($result_saldo) {
         echo "<script>alert('Data Saldo berhasil ditambahkan!'); window.location.href='index.php';</script>";
